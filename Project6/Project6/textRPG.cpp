@@ -3,6 +3,13 @@
 #include<time.h>
 
 using namespace std;
+#define NAME_SIZE 32
+#define MONSTER_NUM 3
+#define ITEM_DESC 512
+#define INVENTORY_MAX 20
+#define STORE_WEAPON_MAX 3
+#define STORE_ARMOR_MAX 3 // 상점에서  파는 무기, 방어구 개수
+
 
 enum BATTLE {
 	no,
@@ -33,10 +40,34 @@ enum JOB {
 	JB_end
 };
 
-#define NAME_SIZE 32
-#define MONSTER_NUM 3
+enum STORE_MENU {
+	SM_none,
+	SM_weapon,
+	SM_armor,
+	SM_back,
+};
+
+enum ITEM_TYPE {
+	non,
+	weapon,
+	armor,
+	IT_back
+};
+struct ITEM {
+	char name[NAME_SIZE];
+	char type[NAME_SIZE];
+	ITEM_TYPE itype;
+	int itMini;
+	int itMax;
+	int price; //살때 가격
+	int sell; //팔때 가격
+	char desc[ITEM_DESC];//아이템  설명
+
+};
 
 struct _INVENTORY { //열거체 MENU의 INVENTORY와 겹치면 에러 발생
+	ITEM item[INVENTORY_MAX];
+	int invencount; //인벤토리 얼마나 차있는지 카운트
 	int gold;
 };
 
@@ -103,7 +134,7 @@ int main() {
 			continue;
 		}
 		else if (job <= JB_none || job >= JB_end) {
-			job == JB_none; // 1~3이외의 다른 값을 입력한 경우 job 변수에 JB_none을 넣어주어
+			job = JB_none; // 1~3이외의 다른 값을 입력한 경우 job 변수에 JB_none을 넣어주어
 			//while문(직업 선택)을 다시 선택할 수 있게 한다
 		}
 
@@ -210,6 +241,57 @@ int main() {
 	monster[2].goldMin = 20000;
 	monster[2].goldMax = 50000;
 
+	//상점에서 판매할 아이템 목록 생성
+	ITEM storeweapon[STORE_WEAPON_MAX] = {};
+	ITEM storearmor[STORE_ARMOR_MAX] = {};
+
+	//각 아이템 정보 설정
+
+	strcpy_s(storeweapon[0].name, "검");
+	strcpy_s(storeweapon[0].type, "무기");
+	strcpy_s(storeweapon[0].desc, "평범한 검이다.");
+	storeweapon[0].itype = weapon;
+	storeweapon[0].price = 1000;
+	storeweapon[0].sell = 700;
+	
+	strcpy_s(storeweapon[1].name, "도끼");
+	strcpy_s(storeweapon[1].type, "무기");
+	strcpy_s(storeweapon[1].desc, "굉장한 도끼이다.");
+	storeweapon[1].itype = weapon;
+	storeweapon[1].price = 2000;
+	storeweapon[1].sell = 1400;
+
+	strcpy_s(storeweapon[2].name, "창");
+	strcpy_s(storeweapon[2].type, "무기");
+	strcpy_s(storeweapon[2].desc, "엄청난 창이다.");
+	storeweapon[2].itype = weapon;
+	storeweapon[2].price = 3000;
+	storeweapon[2].sell = 2100;
+
+	strcpy_s(storearmor[0].name, "투구");
+	strcpy_s(storearmor[0].type, "방어구");
+	strcpy_s(storearmor[0].desc, "평범한 투구다.");
+	storearmor[0].itype = armor;
+	storearmor[0].price = 1000;
+	storearmor[0].sell = 700;
+
+	strcpy_s(storearmor[1].name, "보호대");
+	strcpy_s(storearmor[1].type, "방어구");
+	strcpy_s(storearmor[1].desc, "굉장한 보호대다.");
+	storearmor[1].itype = armor;
+	storearmor[1].price = 2000;
+	storearmor[1].sell = 1400;
+
+	strcpy_s(storearmor[2].name, "방패");
+	strcpy_s(storearmor[2].type, "방어구");
+	strcpy_s(storearmor[2].desc, "엄청난 방패다.");
+	storearmor[2].itype = armor;
+	storearmor[2].price = 3000;
+	storearmor[2].sell = 2100;
+
+	_INVENTORY inven;
+	inven.invencount = 0;
+	inven.gold = 10000;
 
 	while (true) {
 		system("cls");
@@ -347,6 +429,7 @@ int main() {
 							int igold = rand() % (mop.goldMax - mop.goldMin + 1)
 								+ mop.goldMin;
 							player.inventory.gold += igold;
+							inven.gold += igold;
 
 							cout << endl << mop.exp << "경험치 획득" << endl;
 							cout << igold << "골드 획득" << endl;
@@ -376,7 +459,14 @@ int main() {
 							int igold = player.inventory.gold * 0.1f;
 
 							player.exp -= iexp;
-							player.inventory.gold -= igold;
+							if (inven.gold - igold < 0) {
+								player.inventory.gold = 0;
+								inven.gold = 0;
+							}
+							else {
+								player.inventory.gold -= igold;
+								inven.gold -= igold;
+							}
 
 							cout << endl << iexp << " 경험치 lost" << endl;
 							cout << igold << " 골드 lost" << endl;
@@ -402,12 +492,98 @@ int main() {
 		
 
 		case STORE: {
+			while (true) {
+				system("cls");
+				cout << "==================== 상점 ================" << endl;
+				cout << "1. 무기상점" << endl;
+				cout << "2. 방어구상점" << endl;
+				cout << "3. 뒤로가기" << endl;
+				cout << "상점을 선택하세요: " << endl;
+				int istore;
+				cin >> istore;
+
+				if (cin.fail()) {
+					cin.clear();
+					cin.ignore(1023, '\n');
+					continue;
+				}
+
+				else if (istore == SM_back) {
+					break;
+				}
+
+				switch (istore) {
+					case SM_weapon: {
+
+						while (true) {
+							system("cls");
+							cout << "==================== 무기상점 ================" << endl;
+							
+							//판매목록 출력
+							for (int i = 0; i <= STORE_WEAPON_MAX; i++) {
+								if (i == STORE_WEAPON_MAX) {
+									cout << i + 1 << ". 뒤로가기" << endl;
+									break;
+								}
+								
+								cout << i + 1 << ". " << storeweapon[i].name << "\t타입: " << storeweapon[i].type << "\t가격: " << storeweapon[i].price 
+									<< "\t설명: " << storeweapon[i].desc << endl;
+							}
+
+							cout << "구매할 아이템을 선택하시오. " << endl;
+							cin >> istore;
+
+							if (cin.fail()) {
+								cin.clear();
+								cin.ignore(1024, '\n');
+								continue;
+							}
+							else if (istore == STORE_WEAPON_MAX + 1) {
+								break;
+							}
+
+							if (inven.invencount >= INVENTORY_MAX || inven.gold < storeweapon[istore - 1].price) {
+								cout << " 구매 실패" << endl;
+								system("pause");
+								continue;
+							}
+							
+							inven.item[istore - 1] = storeweapon[istore - 1];
+							inven.invencount++;
+							inven.gold -= storeweapon[istore - 1].price;
+
+							cout << storeweapon[istore - 1].name <<" 구매 완료 " << endl;
+
+							system("pause");
+							
+
+						}
+						break;
+					}
+
+					case SM_armor: {
+						break;
+					}
+
+
+				}
+
+			}
 
 			break;
 		}
 
 		case INVENTORY: {
+			cout << "======================== 가방 ===================" << endl;
+			for (int i = 0; i < inven.invencount; i++) {
+				cout << i + 1 << ". " << inven.item[i].name << "\t타입: " << inven.item[i].type << "\t설명: " << inven.item[i].desc << endl;
+				cout << "보유 골드: " << inven.gold << endl;
+				
+			}
 
+			cout << "인벤토리 용량\t" << inven.invencount << " / " << INVENTORY_MAX << endl;
+
+			system("pause");
 			break;
 		}
 		default: {

@@ -1,5 +1,4 @@
 ﻿  textRPG.cpp
-C:\모광윤\2021-1학기\Project6\Project6\textRPG.cpp(106,8): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
-C:\모광윤\2021-1학기\Project6\Project6\textRPG.cpp(375,17): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\모광윤\2021-1학기\Project6\Project6\textRPG.cpp(376,18): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\모광윤\2021-1학기\Project6\Project6\textRPG.cpp(458,17): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\모광윤\2021-1학기\Project6\Project6\textRPG.cpp(459,18): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Project6.vcxproj -> C:\모광윤\2021-1학기\Project6\Debug\Project6.exe
