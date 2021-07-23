@@ -57,8 +57,7 @@ struct ITEM {
 	char name[NAME_SIZE];
 	char type[NAME_SIZE];
 	ITEM_TYPE itype;
-	int itMini;
-	int itMax;
+	int stats;
 	int price; //살때 가격
 	int sell; //팔때 가격
 	char desc[ITEM_DESC];//아이템  설명
@@ -213,7 +212,7 @@ int main() {
 
 	strcpy_s(monster[1].name, "트롤");
 	monster[1].attackMin = 80; //[]안에 숫자 한꺼번에 바꾸기 ==>alt + 클릭 & 드래그로 선택된 세로 범위 수정 가능
-	monster[1].attackMin = 130;
+	monster[1].attackMax = 130;
 	monster[1].armorMin = 60;
 	monster[1].armorMax = 90;
 	monster[1].hp = 2000;
@@ -229,7 +228,7 @@ int main() {
 
 	strcpy_s(monster[2].name, "드래곤");
 	monster[2].attackMin = 250;
-	monster[2].attackMin = 500;
+	monster[2].attackMax = 500;
 	monster[2].armorMin = 200;
 	monster[2].armorMax = 400;
 	monster[2].hp = 30000;
@@ -240,6 +239,8 @@ int main() {
 	monster[2].exp = 30000;
 	monster[2].goldMin = 20000;
 	monster[2].goldMax = 50000;
+
+	int maxexp = 5000;
 
 	//상점에서 판매할 아이템 목록 생성
 	ITEM storeweapon[STORE_WEAPON_MAX] = {};
@@ -253,6 +254,7 @@ int main() {
 	storeweapon[0].itype = weapon;
 	storeweapon[0].price = 1000;
 	storeweapon[0].sell = 700;
+	storeweapon[0].stats = 50;
 	
 	strcpy_s(storeweapon[1].name, "도끼");
 	strcpy_s(storeweapon[1].type, "무기");
@@ -260,6 +262,7 @@ int main() {
 	storeweapon[1].itype = weapon;
 	storeweapon[1].price = 2000;
 	storeweapon[1].sell = 1400;
+	storeweapon[1].stats = 150;
 
 	strcpy_s(storeweapon[2].name, "창");
 	strcpy_s(storeweapon[2].type, "무기");
@@ -267,6 +270,7 @@ int main() {
 	storeweapon[2].itype = weapon;
 	storeweapon[2].price = 3000;
 	storeweapon[2].sell = 2100;
+	storeweapon[2].stats = 300;
 
 	strcpy_s(storearmor[0].name, "투구");
 	strcpy_s(storearmor[0].type, "방어구");
@@ -274,6 +278,7 @@ int main() {
 	storearmor[0].itype = armor;
 	storearmor[0].price = 1000;
 	storearmor[0].sell = 700;
+	storearmor[0].stats = 50;
 
 	strcpy_s(storearmor[1].name, "보호대");
 	strcpy_s(storearmor[1].type, "방어구");
@@ -281,6 +286,7 @@ int main() {
 	storearmor[1].itype = armor;
 	storearmor[1].price = 2000;
 	storearmor[1].sell = 1400;
+	storearmor[1].stats = 150;
 
 	strcpy_s(storearmor[2].name, "방패");
 	strcpy_s(storearmor[2].type, "방어구");
@@ -288,6 +294,7 @@ int main() {
 	storearmor[2].itype = armor;
 	storearmor[2].price = 3000;
 	storearmor[2].sell = 2100;
+	storearmor[2].stats = 300;
 
 	_INVENTORY inven;
 	inven.invencount = 0;
@@ -425,7 +432,27 @@ int main() {
 						//몬스터가 죽었을 경우
 						if (mop.hp <= 0) {
 							cout << mop.name << "사망" << endl;
-							player.exp += mop.exp;
+							
+							if (mop.exp + player.exp >= maxexp) { //레벨업
+								player.level += (mop.exp + player.exp) / maxexp;  //몹 경험치에 따라 1업 이상 할수도 있음
+								player.exp = (mop.exp + player.exp) % maxexp;
+								maxexp = maxexp * (1.1 * (mop.exp + player.exp) / maxexp); 
+
+								player.attackMin += 50; //레벨업 능력치 +
+								player.attackMax += 50;
+								player.armorMin += 50;
+								player.armorMax += 50;
+								player.mpMax += 50;
+								player.mp = player.mpMax;
+								player.hpMax += 50;
+								player.hp = player.hpMax;
+
+							}
+							else {
+								player.exp += mop.exp;
+							}
+
+							
 							int igold = rand() % (mop.goldMax - mop.goldMin + 1)
 								+ mop.goldMin;
 							player.inventory.gold += igold;
@@ -527,6 +554,7 @@ int main() {
 								}
 								
 								cout << i + 1 << ". " << storeweapon[i].name << "\t타입: " << storeweapon[i].type << "\t가격: " << storeweapon[i].price 
+									<< "\t공격력 + " <<storeweapon[i].stats 
 									<< "\t설명: " << storeweapon[i].desc << endl;
 							}
 
@@ -548,11 +576,18 @@ int main() {
 								continue;
 							}
 							
-							inven.item[istore - 1] = storeweapon[istore - 1];
-							inven.invencount++;
+							player.attackMin += storeweapon[istore - 1].stats;
+							player.attackMax += storeweapon[istore - 1].stats;
+
+							inven.item[inven.invencount] = storeweapon[istore - 1];
+							
 							inven.gold -= storeweapon[istore - 1].price;
 
 							cout << storeweapon[istore - 1].name <<" 구매 완료 " << endl;
+							cout << "공격력 + " << storeweapon[istore - 1].stats << endl;
+							cout << "플레이어 공격력 : " << player.attackMin << " ~ " << player.attackMax << endl;
+
+							inven.invencount++;
 
 							system("pause");
 							
@@ -562,6 +597,57 @@ int main() {
 					}
 
 					case SM_armor: {
+						while (true) {
+							system("cls");
+							cout << "==================== 무기상점 ================" << endl;
+
+							//판매목록 출력
+							for (int i = 0; i <= STORE_ARMOR_MAX; i++) {
+								if (i == STORE_ARMOR_MAX) {
+									cout << i + 1 << ". 뒤로가기" << endl;
+									break;
+								}
+
+								cout << i + 1 << ". " << storearmor[i].name << "\t타입: " << storearmor[i].type << "\t가격: " << storearmor[i].price
+									<< "\t방어력 + "<<storearmor[i].stats
+									<< "\t설명: " << storearmor[i].desc << endl;
+							}
+
+							cout << "구매할 아이템을 선택하시오. " << endl;
+							cin >> istore;
+
+							if (cin.fail()) {
+								cin.clear();
+								cin.ignore(1024, '\n');
+								continue;
+							}
+							else if (istore == STORE_ARMOR_MAX + 1) {
+								break;
+							}
+
+							if (inven.invencount >= INVENTORY_MAX || inven.gold < storearmor[istore - 1].price) {
+								cout << " 구매 실패" << endl;
+								system("pause");
+								continue;
+							}
+
+							player.armorMin += storearmor[istore - 1].stats;
+							player.armorMax += storearmor[istore - 1].stats;
+
+							inven.item[inven.invencount] = storearmor[istore - 1];
+
+							inven.gold -= storearmor[istore - 1].price;
+
+							cout << storearmor[istore - 1].name << " 구매 완료 " << endl;
+							cout << "방어력 + " << storearmor[istore - 1].stats << endl;
+							cout << "플레이어 방어력 : " << player.armorMin << " ~ " << player.armorMax << endl;
+
+							inven.invencount++;
+
+							system("pause");
+
+
+						}
 						break;
 					}
 
