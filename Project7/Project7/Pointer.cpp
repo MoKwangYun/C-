@@ -1,8 +1,10 @@
+#include<stdio.h>
+
 #include<iostream>
 
 using namespace std;
 
-int main() {
+int main(void) {
 
 	/*
 	포인터: 메모리 주소를  담아놓는(저장하는) 변수이기 때문에 x86의 경우 4yte, x64의 경우 8byte
@@ -38,10 +40,28 @@ int main() {
 
 	cout << " array address : " << array << endl;
 	cout << " array address : " << &array[0] << endl;
-	
-	
-	//char 포인터
 
+	int* parray = array; //(!= &array);
+
+	cout << " parray[2] : " << parray[2] << endl;
+	cout << " array[2] : " << array[2] << endl;
+
+
+	/*
+	포인터 연산: +, - 연산 활용
+	int 포인터의 경우 메모리 주소에 +1 ==> 1이 아닌 int 타입 크기 만큼 메모리 주소 증가 (+4) 
+	*/
+	
+
+	cout << "parray :" << parray << endl;
+	cout << "parray + 2:" << (parray + 2) << endl; // 저장 메로리 주소 값 8 증가
+
+	cout << "*parray: " << *parray << endl;
+	cout << "*(parray + 2) : " << *(parray + 2) << endl; //8 증가된 주소의 저장값 출력 == array[2] (int 배열은 원소당 메모리 크기 4byte)
+	cout << "*parray + 100: " << *parray + 100 << endl; //*parray를 출력한뒤 그 값에서 100을 더한다
+														 
+	
+	
 
 
 	return 0;
