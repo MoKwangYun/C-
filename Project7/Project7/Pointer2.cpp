@@ -78,7 +78,13 @@ int main() {
 	cout << "student address: " << pvoid << endl;  //int, 구조체 타입 메모리 주소 저장 가능
 	//*pvoid->kor = 1000; -->역참조 불가
 	
+	//이차원 배열& 포인터
 
+	int ar[][2] = { {1,2} , {3,4} };
+
+	cout << "&ar[0][0] : " << &ar[0][0] << endl;
+	cout << "ar : " << ar << endl;
+	cout << "ar[0] : " << ar[0] << endl;
 
 
 }

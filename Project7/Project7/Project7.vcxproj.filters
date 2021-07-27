@@ -21,5 +21,11 @@
     <ClCompile Include="Pointer2.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="이중포인터.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="포인터_함수.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
