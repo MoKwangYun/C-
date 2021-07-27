@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//숫자 퍼즐 게임, wasd를 사용하여 별표를 움직이고 
+//, wasd를 사용하여 별표를 움직이는 숫자 퍼즐 게임
 
 int main() {
 	
