@@ -1,6 +1,9 @@
-#include<stdio.h>//營敝л熱 & 寡翮
+#include<stdio.h>
 
-int Factorial_Re(int num) {//Recursion: 營敝
+//營敝л熱 & 寡翮
+//Recursion: 營敝
+
+int Factorial_Re(int num) {
 
 	if (num == 1) {
 		return 1;
