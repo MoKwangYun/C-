@@ -1,5 +1,7 @@
 #include<stdio.h>
 
+//함수
+
 int Factorial(int num) {//팩토리얼을 함수로 작성
 	
 	int value = 1;
