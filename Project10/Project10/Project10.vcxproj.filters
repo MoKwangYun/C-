@@ -21,8 +21,19 @@
     <ClCompile Include="Single_Linked_List.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Double_Linked_List.cpp">
+    <ClCompile Include="Double_Linkde_List.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Double_Linked_List_HW.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="List.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

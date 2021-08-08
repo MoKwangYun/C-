@@ -1,44 +1,49 @@
 #include<iostream>
 
+#include"List.h" 
+//사용자가 만든 헤더파일을 포함시킬 때는 ""안에 헤더파일 이름 작성
+// --> 정의한 헤더파일 안에 작성된 함수, 구조체 등 사용 가능
+
 using namespace std;
 
-#define NAME_SIZE 32
-typedef struct _tagStudent {
-	char strName[NAME_SIZE];
-	int iNumber;
-	int iKor;
-	int iEng;
-	int iMath;
-	int iTotal;
-	float avg;
-}STUDENT, *PSTUDENT;
 
-typedef struct _tagNode {
-	STUDENT tStudent;
-	_tagNode* pNext;
-	_tagNode* pPrev;
 
-}NODE, * PNODE;
-
-typedef struct _taglist {
-	
-	//Begin과 End는 처음과 끝을 의미하도록 만든다(실제 데이터를 저장하는 노드는 아니고 
-	//데이터를 저장하는 노드는 Begin과 End사이에 존재하도록 만든다
-	PNODE pBegin;
-	PNODE pEnd;
-	int iSize;
-
-}LIST, * PLIST;
-
-void InitList(PLIST pList) {//노드 초기화 함수
-	pList->iSize = 0;
-
-	pList->pBegin 
-
-}
 int main() {
 
 	LIST tList;
 
 	InitList(&tList);
+	while (true) {
+
+		int iMenu = OutputMenu();
+
+		if (iMenu == MM_EXIT)
+			break;
+
+		switch (iMenu) {
+			case MM_INSERT: { //노드 추가
+				Push_Back(&tList);
+
+				break;
+			}
+			case MM_DELETE: {
+				Delete(&tList);
+
+				break;
+			}
+			case MM_SEARCH: {
+				Search(&tList);
+
+				break;
+			}
+			case MM_OUTPUT: {
+				Output(&tList);
+
+				break;
+			}
+		}
+	}
+
+	DestroyList(&tList);
+	return 0;
 }
