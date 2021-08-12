@@ -21,5 +21,14 @@
     <ClCompile Include="Class.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Function_Pointer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Operator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Class_Linked_List.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
