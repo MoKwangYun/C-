@@ -40,7 +40,7 @@ private:
 //반복자 클래스 : 리스트의 노드를 반복해서 순회할 수 있는 기능을 제공하는 클래스
 template<typename T>
 class CListIterator {
-private:
+public:
 	CListIterator() {
 
 	}
@@ -53,6 +53,33 @@ private:
 
 
 	PNODE m_pNode; //현재 기준이 되는 노드
+
+	template<typename T>
+	friend class CLinkedList;
+
+public:
+	bool operator == (const CListIterator<T>& iter) {
+		
+		return m_pNode == iter.m_pNode;
+	}
+
+	bool operator != (const CListIterator<T>& iter) {
+
+		return m_pNode != iter.m_pNode;
+	}
+
+	void operator ++ () {
+		m_pNode = m_pNode->m_pNext;
+	}
+
+	void operator -- () {
+		m_pNode = m_pNode->m_pPrev;
+	}
+
+	T operator *() {//반환타입 = T
+
+		return m_pNode->m_Data;
+	}
 };
 
 template <typename T>
