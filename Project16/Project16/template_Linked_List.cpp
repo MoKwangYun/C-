@@ -22,5 +22,13 @@ int main() {
 
 		cout << *iter << endl;
 	}
+
+	cout <<endl << " ================ reverse ================" << endl << endl;
+	CLinkedList<int>::reverse_iterator riter;
+
+	for (riter = listInt.rbegin(); riter !=listInt.rend(); ++riter) {
+
+		cout << *riter << endl;
+	}
 	return 0;
 }

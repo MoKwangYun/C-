@@ -21,9 +21,18 @@
     <ClCompile Include="template_Linked_List.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Template_LinkedList_reverseIterator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="inner_class.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLinkedList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Reverse_Iterator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

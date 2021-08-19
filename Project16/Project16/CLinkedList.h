@@ -27,6 +27,9 @@ private:
 	template<typename T>
 	friend class CListIterator;
 
+	template<typename T>
+	friend class CListReverseIterator;
+
 
 
 private:
@@ -109,6 +112,10 @@ private:
 
 public:
 	typedef CListIterator<T> iterator;
+	//이너클래스 : CLinkedList 안에 소속되어 있는 것! --> iterator 객체 생성시 
+	//CLinkedList :: iterator 객체 이름;  이처럼 ::을 붙여주어 어떤 클래스에 속해있는지 알게해줌
+
+	typedef CListReverseIterator<T> reverse_iterator;
 
 private:
 	PNODE m_pBegin;
@@ -129,6 +136,22 @@ public:
 
 		return iter;
 	}
+
+	reverse_iterator rbegin() {
+
+		reverse_iterator iter;
+		iter.m_pNode = m_pEnd->m_pPrev;
+
+		return iter;
+	}
+	reverse_iterator rend() {
+
+		reverse_iterator iter;
+		iter.m_pNode = m_pBegin;
+
+		return iter;
+	}
+
 public:
 	/*
 	레퍼런스는 참조하는 대상의 값을 변경할 수 있다. 그런데 const를 붙여주면 참조하는 대상의 값을 변경할 수 없다.
@@ -198,3 +221,56 @@ public:
 	
 };
 
+template<typename T>
+class CListReverseIterator {
+public:
+	CListReverseIterator() {
+
+	}
+	~CListReverseIterator() {
+
+	}
+
+private:
+	template<typename T>
+	friend class CLinkedList;
+
+private:
+	typedef CListNode<T> NODE;
+	typedef CListNode<T>* PNODE;
+
+private:
+	PNODE m_pNode;
+
+public:
+	bool operator ==(const CListReverseIterator<T>& iter) {
+		/*const를 사용하는 이유: 참조한 데이터를 변경하지 않으려고 
+		레퍼런스 사용 이유 : 레퍼런스 변수의 메모리가 훨씬 작아 속도 빠름(레퍼런스 참조 = 4byte) 
+		, 값에 의한 참조일 경우 인자로 받아오는 변수, 클래스 등의 메모리 크기만큼 스택에 지역변수로 저장해야 한다!! 
+
+		-->포인터도 메모리 절약 O, 포인터로 인자로 받아와도 무방(참조의 경우 역참조, 주소연산자(&) 등 필요 없기 때문에 레퍼런스가 훨신 간단한 듯)
+				*/
+		return m_pNode == iter.m_pNode;
+	}
+
+	bool operator !=(const CListReverseIterator<T>& iter) {
+
+		return m_pNode != iter.m_pNode;
+	}
+
+	void operator ++() { //역반복이기 때문에 이전노드로 이동하도록
+
+		m_pNode = m_pNode->m_pPrev;
+	}
+
+	void operator --() {
+
+		m_pNode = m_pNode->m_pNext;
+	}
+
+	T operator *() {//연산에 객체가 하나만 필요하기 때문에  인자를 비운다 , 만약 * 를 곱하기로 사용한다면 객체가 두개가 필요하다 --> *(...) 인자 필요
+
+		return m_pNode->m_Data;
+	}
+
+};
