@@ -16,5 +16,13 @@ int main() {
 		cout << vecInt[i] << endl;
 	}
 
+
+	cout << endl << " ========== iterator ==============" << endl << endl;
+	CVector<int>::iterator iter;
+	int j = 0;
+	for (iter = vecInt._begin(); iter != vecInt._end(); ++iter) {
+		cout << *iter << endl;
+	}
+
 	return 0;
 }

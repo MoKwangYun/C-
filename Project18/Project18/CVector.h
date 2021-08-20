@@ -13,9 +13,15 @@ private:
 	template<typename T>
 	friend class CVector;
 
+	template<typename T>
+	friend class Iterator;
+
 private:
 	T m_Data;
 	int m_index;
+
+public:
+	CVectorNode<T>* m_pNext;
 
 
 };
@@ -29,8 +35,11 @@ public:
 		m_iCapasity = 2;//초기 배열 크기를 2로 지정
 
 		m_pArray = new NODE[m_iCapasity + 2];//동적배열 할당 , + 2는 end와 begin 노드
+
+		PNODE m_pBegin = new NODE;
+		
 	}
-	cVector(int iSize) {//입력 받은 iSize만큼 배열 공간 생성하고 시작하는 생성자
+	CVector(int iSize) {//입력 받은 iSize만큼 배열 공간 생성하고 시작하는 생성자
 		m_pArray = new NODE[iSize + 2];
 		m_iCapasity = iSize;
 		m_iSize = 0;
@@ -42,8 +51,10 @@ public:
 private:
 	typedef CVectorNode<T> NODE;
 	typedef CVectorNode<T>* PNODE;
+public:
+	typedef Iterator<T> iterator;
 
-private:
+public:
 	PNODE m_pArray;
 	unsigned int m_iSize; //전체 노드 개수
 	unsigned int m_iCapasity; //전체 배열 개수
@@ -57,6 +68,7 @@ public:
 		m_pArray[m_iSize + 1].m_Data = data;//0번 인덱스는 begin 노드이고 iSize에는 begin과 end노드는 포함되지 않는다.
 		m_pArray[m_iSize + 1].m_index = m_iSize;
 		++m_iSize;
+		m_pArray[m_iSize].m_pNext = &(m_pArray[m_iSize + 1]);
 	}
 
 	void resize(int iSize) {
@@ -115,19 +127,69 @@ public:
 		delete[] m_pArray;
 		m_iSize = 0;
 		m_iCapasity = 2;
-		m_pArray = newNODE[m_iCapasity = 2];
+		m_pArray = new NODE[m_iCapasity = 2];
 	}
 
 	void reserve(int iSize) {//배열공간을 입력받은 iSize만큼 만들어두는 함수
 
 		delete[] m_pArray;
-		m_pArray = new NODE{ iSize + 2 };
+		m_pArray = new NODE[ iSize + 2 ];
 
 		m_iCapasity = iSize;
 		m_iSize = 0;
 
 		
 	}
+
+	iterator _begin() {
+		iterator iter;
+		iter.pNode = &(m_pArray[0]);
+		return iter;
+	}
+
+	iterator _end() {
+		
+
+		iterator iter;
+		iter.pNode = &(m_pArray[m_iSize ]);
+		return iter;
+	}
 };
 
 //iterator 구현해보기!! --> 0번 인덱스를 begin노드로, 데이터가 들어있는 마지막 노드의 다음 노드를 end 노드로 설정해야함
+
+template<typename T>
+class Iterator {
+public:
+	Iterator() {
+
+	}
+	~Iterator() {
+
+	}
+
+	template<typename T>
+	friend class CVector;
+
+public:
+	typedef CVectorNode<T> NODE;
+	typedef CVectorNode<T>* PNODE;
+
+public:
+	PNODE pNode = new NODE;
+
+public:
+	bool operator != (const Iterator& iter) {
+
+		return pNode == iter.pNode;
+	}
+
+	void operator ++() {
+
+		pNode = pNode->m_pNext;
+	}
+
+	T operator *() {
+		return pNode->m_Data;
+	}
+};
